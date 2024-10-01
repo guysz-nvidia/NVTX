@@ -166,43 +166,150 @@
 #if !defined(NVTX_VERSION)
 #define NVTX_VERSION 3
 
+/* Platform-dependent defines:
+ * 
+ * - NVTX_API - Calling conventions (only used on Windows, and only effects
+ *   32-bit x86 builds, i.e. callee pops stack instead of caller)
+ *
+ * - NVTX_INLINE_STATIC - Ensure function has internal linkage, and suggest
+ *   avoiding code-gen of the function.  Without this, function has external
+ *   linkage with a strong symbol, so linker expects only one definition.
+ * 
+ * - NVTX_DYNAMIC_EXPORT - Make function an exported entry point from a
+ *   dynamic library or shared object.
+ * 
+ * - NVTX_EXPORT_UNMANGLED_FUNCTION_NAME - When used inside the body of a
+ *   function declared with NVTX_DYNAMIC_EXPORT, ensures the symbol exported
+ *   for the function is the exact string of the function's name as written
+ *   in the code.  Name-mangling or name-decoration is disabled.  Note that
+ *   on many platforms this is not necessary, since either the function name
+ *   is already exported verbatim, or the dynamic loader also checks for
+ *   functions with the mangling applied.  Forcing the exports to avoid any
+ *   mangling simplifies usage across platforms and from other languages.
+ */
 #if defined(_MSC_VER)
+
 #define NVTX_API __stdcall
 #define NVTX_INLINE_STATIC __inline static
-#else /*defined(__GNUC__)*/
+#define NVTX_DYNAMIC_EXPORT __declspec(dllexport)
+
+#if defined(_M_IX86) || defined(_M_ARM64EC)
+#define NVTX_EXPORT_UNMANGLED_FUNCTION_NAME _Pragma("comment(linker, \"/EXPORT:\" __FUNCTION__ \"=\" __FUNCDNAME__)")
+#else
+#define NVTX_EXPORT_UNMANGLED_FUNCTION_NAME
+#endif
+
+#else /* GCC-like compiler */
+
 #define NVTX_API
 #if defined(__cplusplus) || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L)
 #define NVTX_INLINE_STATIC inline static
 #else
 #define NVTX_INLINE_STATIC __inline__ static
 #endif
-#endif /* Platform */
+#define NVTX_DYNAMIC_EXPORT __attribute__((visibility("default")))
+#define NVTX_EXPORT_UNMANGLED_FUNCTION_NAME
 
+#endif /* Platform-dependent defines */
+
+
+
+/* API linkage/export options:
+ *
+ * - By default, the NVTX API functions are declared as "inline", with the
+ *   implementations provided in the headers.  This allows multiple .c/.cpp
+ *   files in the same project to include NVTX headers without duplicate-
+ *   definition linker errors.  An optimizing compiler should inline these
+ *   implementations, ensuring that the overhead of making an NVTX call is as
+ *   low as possible, even without enabling link-time optimizations.
+ * 
+ * - NVTX_NO_IMPL - Use when writing NVTX tools.  If this macro is defined,
+ *   the NVTX headers will provide all the typedefs, macros, and declarations
+ *   of API functions (not marked inline), but no function implementations.
+ * 
+ * - NVTX_EXPORT_API - NVTX is normally used in C/C++ applications by simply
+ *   including the headers.  There is no need to link with a static library,
+ *   or to ship a dynamic library with the application (this was changed in
+ *   NVTX v3).  For other languages, it's not convenient to use a header-only
+ *   C library.  The best way to provide an idiomatic NVTX API for another
+ *   language is a .c file that includes the NVTX headers and implements
+ *   functions for that language using its native calling conventions and
+ *   datatypes -- this method can allow static linking to avoid depending on
+ *   a separate dynamic library.  Alternatively, other languages may support
+ *   using C calling conventions to directly call C functions exported from a
+ *   dynamic library.  To build such a library, write a .c file that defines
+ *   NVTX_EXPORT_API and includes any/all of the NVTX headers.  Compile this
+ *   file as a dynamic library, and the NVTX API functions from the included
+ *   headers will be exported with no name-mangling or decoration.  Defining
+ *   ABI-compatible NVTX struct and enum types in the other language is the
+ *   responsibility of the user of this dynamic library.
+ *
+ * Whichever of the above modes is chosen, the following macros are defined
+ * appropriately below to implement that mode.  These macros are only defined
+ * if not already defined by the user, so they may be overridden by users to
+ * handle advanced cases.
+ *
+ * - NVTX_DECLSPEC - Specify linkage for NVTX API functions.
+ *
+ * - NVTX_SET_NAME_MANGLING_OPTIONS - If necessary for the platform, will use
+ *   platform-dependent syntax for ensuring function name is exported with no
+ *   name-mangling or decoration.  Certain compiler and calling-convention
+ *   combinations will add name-mangling or decorations when exporting NVTX
+ *   function name symbols, which makes it much harder for other languages
+ *   to access these functions.  This macro must be used inside a function's
+ *   body because it uses built-in macros to get the current function's name.
+ */
 #if defined(NVTX_NO_IMPL)
-/* When omitting implementation, avoid declaring functions inline */
-/* without definitions, since this causes compiler warnings. */
-#define NVTX_DECLSPEC
-#elif defined(NVTX_EXPORT_API)
-/* Allow overriding definition of NVTX_DECLSPEC when exporting API. */
-/* Default is empty, meaning non-inline with external linkage. */
+
+/* When omitting implementation, avoid declaring functions inline
+ * without definitions, since this causes compiler warnings. */
 #if !defined(NVTX_DECLSPEC)
 #define NVTX_DECLSPEC
 #endif
-#else
-/* Normal NVTX usage defines the NVTX API inline with static */
-/* (internal) linkage. */
-#define NVTX_DECLSPEC NVTX_INLINE_STATIC
+#if !defined(NVTX_SET_NAME_MANGLING_OPTIONS)
+#define NVTX_SET_NAME_MANGLING_OPTIONS
 #endif
 
+#elif defined(NVTX_EXPORT_API)
+
+/* Add platform-dependent declaration syntax to ensure NVTX API functions are
+ * exported when compiling as a dynamic library/shared object, and ensure the
+ * exported names are not mangled/decorated. */
+#if !defined(NVTX_DECLSPEC)
+#define NVTX_DECLSPEC NVTX_DYNAMIC_EXPORT
+#endif
+#if !defined(NVTX_SET_NAME_MANGLING_OPTIONS)
+#define NVTX_SET_NAME_MANGLING_OPTIONS NVTX_EXPORT_UNMANGLED_FUNCTION_NAME
+#endif
+
+#else /* Normal NVTX usage */
+
+/* Functions definitions are provided, and functions are declared inline to
+ * avoid duplicate-definition linker errors when using multiple source files. */
+#if !defined(NVTX_DECLSPEC)
+#define NVTX_DECLSPEC NVTX_INLINE_STATIC
+#endif
+#if !defined(NVTX_SET_NAME_MANGLING_OPTIONS)
+#define NVTX_SET_NAME_MANGLING_OPTIONS
+#endif
+
+#endif
+
+/* Platform-dependent helpers for defining global variables in header files.
+ * Ensures the linker uses only one instance when multiple source files include
+ * the headers, avoiding duplicate-definition linker errors. */ 
 #include "nvtxDetail/nvtxLinkOnce.h"
 
+/* Macros for applying major-version-specific suffix to NVTX global symbols, so
+ * usage of different versions in different source files is supported without
+ * violating the one-definition rule. */
 #define NVTX_VERSIONED_IDENTIFIER_L3(NAME, VERSION) NAME##_v##VERSION
 #define NVTX_VERSIONED_IDENTIFIER_L2(NAME, VERSION) NVTX_VERSIONED_IDENTIFIER_L3(NAME, VERSION)
 #define NVTX_VERSIONED_IDENTIFIER(NAME) NVTX_VERSIONED_IDENTIFIER_L2(NAME, NVTX_VERSION)
 
 /**
- * The nvToolsExt library depends on stdint.h.  If the build tool chain in use
- * does not include stdint.h then define NVTX_STDINT_TYPES_ALREADY_DEFINED
+ * The NVTX library depends on stdint.h.  If the build tool chain in use
+ * does not include stdint.h, then define NVTX_STDINT_TYPES_ALREADY_DEFINED
  * and define the following types:
  * <ul>
  *   <li>uint8_t
@@ -216,7 +323,8 @@
  *   <li>uintptr_t
  *   <li>intptr_t
  * </ul>
- * #define NVTX_STDINT_TYPES_ALREADY_DEFINED if you are using your own header file.
+ * Be sure to define NVTX_STDINT_TYPES_ALREADY_DEFINED if you are using your
+ * own definitions instead of stdint.h.
  */
 #ifndef NVTX_STDINT_TYPES_ALREADY_DEFINED
 #include <stdint.h>
@@ -229,9 +337,8 @@ extern "C" {
 #endif /* __cplusplus */
 
 /**
-* Result Codes
+* Result Codes used for the NVTX tool loader.
 */
-
 #define NVTX_SUCCESS 0
 #define NVTX_FAIL 1
 #define NVTX_ERR_INIT_LOAD_PROPERTY 2
