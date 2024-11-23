@@ -45,7 +45,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
