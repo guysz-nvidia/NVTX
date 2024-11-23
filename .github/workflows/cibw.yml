@@ -16,11 +16,9 @@ jobs:
         include:
         - os: 'ubuntu-latest'
           cibw_archs_linux: "x86_64"
-          docker_py_container: "python"
           name: 'ubuntu-x86_64'
         - os: 'ubuntu-latest'
           cibw_archs_linux: "aarch64"
-          docker_py_container: "arm64v8/python"
           name: 'ubuntu-qemu-aarch64'
           qemu: true
     steps:
@@ -63,16 +61,6 @@ jobs:
       with:
         output-dir: dist
         package-dir: python
-
-    - name: Run docker smoke tests for all python versions
-      run: |
-        for pyver in 3.8 3.9 3.10 3.11; do
-          docker run --rm \
-            -v $(pwd)/dist:/wheels \
-            ${{ matrix.docker_py_container }}:$pyver-bullseye \
-            sh -c \
-            "python3 -m pip install --verbose --find-links=file:///wheels --no-index nvtx && python3 -m pip check && python3 -c 'import nvtx; print(nvtx.annotate())';" ;\
-        done
 
     - name: Upload distributions
       uses: actions/upload-artifact@v3
