@@ -41,18 +41,11 @@ jobs:
         path: python/dist
 
   wheels:
-    name: Build wheels on ${{ matrix.os }} ${{ matrix.name }}
+    name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        include:
-        - os: 'ubuntu-latest'
-          cibw_archs_linux: "x86_64"
-          name: 'ubuntu-x86_64'
-        - os: 'ubuntu-latest'
-          cibw_archs_linux: "aarch64"
-          name: 'ubuntu-qemu-aarch64'
-          qemu: true
+        os: [ubuntu-latest]
     steps:
     - name: Check out repository
       uses: actions/checkout@v3
@@ -60,19 +53,13 @@ jobs:
         ref: ${{ inputs.branchOrTag }}
 
     - name: Set up QEMU
-      if: matrix.qemu
+      if: matrix.os == 'ubuntu-latest'
       uses: docker/setup-qemu-action@v2
       with:
         platforms: arm64
 
     - name: Build wheels
       uses: pypa/cibuildwheel@v2.15.0
-      env:
-        CIBW_SKIP: "*musllinux* cp36-* cp37-*"
-        CIBW_BUILD: "cp*"
-        CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs_linux }}
-        CIBW_TEST_COMMAND: "pytest {package}/tests"
-        CIBW_TEST_REQUIRES: "pytest Cython setuptools"
       with:
         output-dir: dist
         package-dir: python
