@@ -53,11 +53,8 @@ jobs:
         CIBW_SKIP: "*musllinux* cp36-* cp37-*"
         CIBW_BUILD: "cp*"
         CIBW_ARCHS_LINUX: ${{ matrix.cibw_archs_linux }}
-        CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-        CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
         CIBW_TEST_COMMAND: "pytest {package}/tests"
         CIBW_TEST_REQUIRES: "pytest Cython setuptools"
-        CIBW_REPAIR_WHEEL_COMMAND_LINUX: 'auditwheel repair -w {dest_dir} {wheel}'
       with:
         output-dir: dist
         package-dir: python
