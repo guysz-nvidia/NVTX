@@ -4,15 +4,8 @@ on:
   workflow_dispatch:
     inputs:
       branchOrTag:
-        description: 'Branch or tag to checkout'
-        required: true
-        default: 'release-v3'
-        type: string
-      prNumber:
-        description: 'PR number (overrides branch/tag if > 0)'
+        description: 'Branch, tag or SHA to checkout'
         required: false
-        type: integer
-        default: 0
 
 jobs:
   build:
@@ -34,7 +27,6 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0  # unshallow fetch for setuptools-scm
         ref: ${{ inputs.branchOrTag }}
 
     - name: Set up Python
