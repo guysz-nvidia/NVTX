@@ -1,5 +1,5 @@
 /*
- * SPDX-FileCopyrightText: Copyright (c) 2023-2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+ * SPDX-FileCopyrightText: Copyright (c) 2024 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
  * SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -112,8 +112,8 @@ NVTX_DECLSPEC ret_type NVTX_API fn_name signature { \
 /* Non-void functions. */
 #define NVTX_EXT_FN_RETURN_INVALID(rtype) return ((rtype)(intptr_t)-1);
 
-NVTX_EXT_COUNTERS_IMPL_FN_V1(uint64_t, nvtxCountersRegister,
-    (nvtxDomainHandle_t domain, const nvtxCountersAttr_t* attr),
+NVTX_EXT_COUNTERS_IMPL_FN_V1(uint64_t, nvtxCounterRegister,
+    (nvtxDomainHandle_t domain, const nvtxCounterAttr_t* attr),
     (domain, attr))
 
 #undef NVTX_EXT_FN_RETURN_INVALID
@@ -123,21 +123,21 @@ NVTX_EXT_COUNTERS_IMPL_FN_V1(uint64_t, nvtxCountersRegister,
 #define NVTX_EXT_FN_RETURN_INVALID(rtype)
 #define return
 
-NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCountersSampleInt64,
-    (nvtxDomainHandle_t domain, uint64_t countersId, int64_t value),
-    (domain, countersId, value))
+NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCounterSampleInt64,
+    (nvtxDomainHandle_t domain, uint64_t counterId, int64_t value),
+    (domain, counterId, value))
 
-NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCountersSampleFloat64,
-    (nvtxDomainHandle_t domain, uint64_t countersId, double value),
-    (domain, countersId, value))
+NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCounterSampleFloat64,
+    (nvtxDomainHandle_t domain, uint64_t counterId, double value),
+    (domain, counterId, value))
 
-NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCountersSample,
-    (nvtxDomainHandle_t domain, uint64_t countersId, const void* values, size_t size),
-    (domain, countersId, values, size))
+NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCounterSample,
+    (nvtxDomainHandle_t domain, uint64_t counterId, const void* values, size_t size),
+    (domain, counterId, values, size))
 
-NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCountersSampleNoValue,
-    (nvtxDomainHandle_t domain, uint64_t countersId, uint8_t reason),
-    (domain, countersId, reason))
+NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCounterSampleNoValue,
+    (nvtxDomainHandle_t domain, uint64_t counterId, uint8_t reason),
+    (domain, counterId, reason))
 
 #undef return
 #undef NVTX_EXT_FN_RETURN_INVALID
