@@ -821,7 +821,7 @@ typedef struct nvtxPayloadEnumAttr_v1
 
 typedef struct nvtxScopeAttr_v1
 {
-    size_t structSize;
+    size_t      structSize;
 
     /**
      * Path delimited by '/' characters, relative to parentScope. Leading
@@ -834,14 +834,14 @@ typedef struct nvtxScopeAttr_v1
      */
     const char* path;
 
-    uint64_t parentScope;
+    uint64_t    parentScope;
 
     /**
      * The static scope ID must be unique within the domain,
      * >= NVTX_SCOPE_ID_STATIC_START, and
      * < NVTX_SCOPE_ID_DYNAMIC_START.
      */
-    uint64_t scopeId;
+    uint64_t    scopeId;
 } nvtxScopeAttr_t;
 
 #endif /* NVTX_PAYLOAD_TYPEDEFS_V1 */
