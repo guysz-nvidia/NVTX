@@ -849,6 +849,39 @@ typedef struct nvtxScopeAttr_v1
 #ifndef NVTX_PAYLOAD_TYPEDEFS_DEFERRED_V1
 #define NVTX_PAYLOAD_TYPEDEFS_DEFERRED_V1
 
+/** Attributes of an NVTX time domain. */
+typedef struct nvtxTimeDomainAttr_v1
+{
+    /** Identifyer of the NVTX scope the time domain is associated with. */
+    uint64_t scopeId;
+
+    /** Predefined `NVTX_TIMESTAMP_TYPE_*`. */
+    uint64_t timestampTypeId;
+
+    /**
+     * Static (feed-forward) time domain ID. `0` makes the tool generate the ID.
+     * The static schema ID must be >= NVTX_TIME_DOMAIN_ID_STATIC_START and
+     * < NVTX_TIME_DOMAIN_ID_DYNAMIC_START
+     */
+    uint64_t timeDomainId;
+
+    /** Properties of the timer (use NVTX_TIMER_FLAG_*). */
+    uint64_t timerFlags;
+
+    /** Ticks per second (0 means unknown). */
+    int64_t  timerResolution;
+
+    /** Point in time when the timer starts (use NVTX_TIMER_START_*). */
+    uint64_t timerStart;
+} nvtxTimeDomainAttr_t;
+
+/** Synchronization point between two time domains. */
+typedef struct nvtxSyncPoint_v1
+{
+    int64_t src;
+    int64_t dst;
+} nvtxSyncPoint_t;
+
 /**
  * \brief Helper struct to submit a batch of events (marks or ranges).
  *
@@ -1028,6 +1061,105 @@ NVTX_DECLSPEC uint8_t NVTX_API nvtxDomainIsEnabled(
 #define NVTX_PAYLOAD_API_FUNCTIONS_DEFERRED_V1
 
 /**
+ * Get a timestamp from the NVTX handler or tool. If no tool is attached, the
+ * CPU TSC might be returned. No guarantees are made.
+ * The returned timestamp is just meant to be used in deferred events/counters.
+ */
+NVTX_DECLSPEC int64_t NVTX_API nvtxTimestampGet(void);
+
+/**
+ * Register a time domain. Associates an NVTX scope with the time domain.
+ * Timestamps of NVTX events or counters in the scope are interpreted according
+ * to the time domain definitions.
+ *
+ * @param domain NVTX domain handle (0 for default domain).
+ * @return time domain ID.
+ */
+NVTX_DECLSPEC uint64_t NVTX_API nvtxTimeDomainRegister(
+    nvtxDomainHandle_t domain,
+    const nvtxTimeDomainAttr_t* timeAttr);
+
+/**
+ * Provide the pointer to a function that returns a timestamp as `int64_t`.
+ * This enables the tool to create time synchronization points.
+ *
+ * @param domain NVTX domain handle (0 for default domain).
+ * @param flag Indicates if it is safe to call the timestamp provider after
+ *             process teardown.
+ */
+NVTX_DECLSPEC void NVTX_API nvtxTimerSource(
+    nvtxDomainHandle_t domain,
+    uint64_t timeDomainId,
+    uint64_t flags,
+    int64_t (*nvtxTimestampProviderFn)());
+
+/**
+ * Same as `nvtxTimerSource`, but with an additional data pointer argument.
+ *
+ * @param domain NVTX domain handle (0 for default domain).
+ */
+NVTX_DECLSPEC void NVTX_API nvtxTimerSourceWithData(
+    nvtxDomainHandle_t domain,
+    uint64_t timeDomainId,
+    uint64_t flags, /** \todo safe or not safe to call after process teardown */
+    int64_t (*timestampProviderFn)(void* data),
+    void* data);
+
+/**
+ * Provides a synchronization point between two time domains.
+ * Two synchronization points are required to enable a timestamp conversion.
+ * The tool must know one of the time domains or it least must be able to chain
+ * conversions to enable the conversion between the given timestamps.
+ * Instead of the time domain ID, the timestamp type can be provided if it is
+ * unambiguous which timer is used, e.g. CPU TSC.
+ *
+ * @param domain NVTX domain handle (0 for default domain).
+ */
+NVTX_DECLSPEC void NVTX_API nvtxTimeSyncPoint(
+    nvtxDomainHandle_t domain,
+    uint64_t timeDomainId1,
+    uint64_t timeDomainId2,
+    int64_t timestamp1,
+    int64_t timestamp2);
+
+/**
+ * The same as `nvtxTimeSyncPoint` but with multiple synchronization points.
+ *
+ * @param domain NVTX domain handle (0 for default domain).
+ */
+NVTX_DECLSPEC void NVTX_API nvtxTimeSyncPointTable(
+    nvtxDomainHandle_t domain,
+    uint64_t timeDomainIdSrc,
+    uint64_t timeDomainIdDst,
+    const nvtxSyncPoint_t* syncPoints,
+    size_t count);
+
+/**
+ * @brief Pass a conversion factor between two time domains to the NVTX handler.
+ *
+ * @param domain NVTX domain handle (0 for default domain).
+ */
+NVTX_DECLSPEC void NVTX_API nvtxTimestampConversionFactor(
+    nvtxDomainHandle_t domain,
+    uint64_t timeDomainIdSrc,
+    uint64_t timeDomainIdDst,
+    double slope,
+    int64_t timestampSrc,
+    int64_t timestampDst);
+
+/**
+ * @brief Submit one deferred event.
+ *
+ * @param domain NVTX domain handle (0 for default domain).
+ * @param payloadData Pointer to an array of structured payloads.
+ * @param numPayloads Number of payloads of the event.
+ */
+NVTX_DECLSPEC void NVTX_API nvtxEventSubmit(
+    nvtxDomainHandle_t domain,
+    const nvtxPayloadData_t* payloadData,
+    size_t numPayloads);
+
+/**
  * \brief Submit a batch of deferred events in the given domain.
  *
  * @param domain NVTX domain
@@ -1068,6 +1200,14 @@ NVTX_DECLSPEC void NVTX_API nvtxEventBatchSubmit(
 #ifndef NVTX_PAYLOAD_CALLBACK_ID_DEFERRED_V1
 #define NVTX_PAYLOAD_CALLBACK_ID_DEFERRED_V1
 
+#define NVTX3EXT_CBID_nvtxTimestampGet               8
+#define NVTX3EXT_CBID_nvtxTimeDomainRegister         9
+#define NVTX3EXT_CBID_nvtxTimerSource               10
+#define NVTX3EXT_CBID_nvtxTimerSourceWithData       11
+#define NVTX3EXT_CBID_nvtxTimeSyncPoint             13
+#define NVTX3EXT_CBID_nvtxTimeSyncPointTable        14
+#define NVTX3EXT_CBID_nvtxTimestampConversionFactor 15
+#define NVTX3EXT_CBID_nvtxEventSubmit               16
 #define NVTX3EXT_CBID_nvtxEventBatchSubmit          17
 
 #endif /* NVTX_PAYLOAD_CALLBACK_ID_DEFERRED_V1 */
