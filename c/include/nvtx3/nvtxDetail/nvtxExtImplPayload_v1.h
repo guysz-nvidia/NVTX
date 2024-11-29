@@ -153,6 +153,9 @@ NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxRangeEndPayload, (nvtxDomainHandle_t domai
     nvtxRangeId_t id, const nvtxPayloadData_t* payloadData, size_t count),
     (domain, id, payloadData, count))
 
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxEventBatchSubmit, (nvtxDomainHandle_t domain,
+    const nvtxEventBatch_t* events), (domain, events))
+
 #undef return
 #undef NVTX_EXT_FN_RETURN_INVALID
 /* END: void functions. */

@@ -482,6 +482,20 @@
 
 #endif /* NVTX_SCOPES_V1 */
 
+#ifndef NVTX_BATCH_FLAGS_V1
+#define NVTX_BATCH_FLAGS_V1
+/**
+ * Timestamp ordering flags for a batch of deferred events or counters.
+ * By default, chronological order by the first timestamp of the event or
+ * counter is assumed.
+ */
+#define NVTX_BATCH_FLAG_TIME_SORTED            0
+#define NVTX_BATCH_FLAG_TIME_SORTED_PARTIALLY  (1 << 1)
+#define NVTX_BATCH_FLAG_TIME_SORTED_PER_SCOPE  (2 << 1)
+#define NVTX_BATCH_FLAG_UNSORTED               (3 << 1)
+
+#endif /* NVTX_BATCH_FLAGS_V1 */
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -832,6 +846,53 @@ typedef struct nvtxScopeAttr_v1
 
 #endif /* NVTX_PAYLOAD_TYPEDEFS_V1 */
 
+#ifndef NVTX_PAYLOAD_TYPEDEFS_DEFERRED_V1
+#define NVTX_PAYLOAD_TYPEDEFS_DEFERRED_V1
+
+/**
+ * \brief Helper struct to submit a batch of events (marks or ranges).
+ *
+ * By default, events are assumed to be chronologically sorted by the first
+ * timestamp in the event (start time in a range). If the events are not sorted,
+ * the `flags` field must be set accordingly (see `NVTX_BATCH_FLAG_*`).
+ */
+typedef struct nvtxEventBatch_v1
+{
+    /**
+     * Identifier of the data layout of a deferred event in the array of events.
+     * Only layouts with static payload size are allowed. The size of an event
+     * in the array is specified by the static payload size during the schema
+     * registration.
+     */
+    uint64_t    eventSchemaId;
+
+    /** Size of the array of deferred events (in bytes). */
+    size_t      size;
+
+    /** Pointer to the array of deferred events. */
+    const void* events;
+
+    /** Scope of all events or counters in the batch. */
+    uint64_t    scope;
+
+    /** Timestamp ordering (sorted, partially sorted, unsorted), etc. */
+    uint64_t    flags;
+
+    /** Flexible data which can be referenced by events in the batch. */
+    const void* flexData;
+
+    /** Size of the flexible data memory blob. */
+    size_t      flexDataSize;
+
+    /**
+     * Offset from the `flexData` pointer to the begin of the flexible data
+     * in bytes.
+     */
+    size_t      flexDataOffset;
+} nvtxEventBatch_t;
+
+#endif /* NVTX_PAYLOAD_TYPEDEFS_DEFERRED_V1 */
+
 #ifndef NVTX_PAYLOAD_API_FUNCTIONS_V1
 #define NVTX_PAYLOAD_API_FUNCTIONS_V1
 
@@ -963,6 +1024,21 @@ NVTX_DECLSPEC uint8_t NVTX_API nvtxDomainIsEnabled(
 
 #endif /* NVTX_PAYLOAD_API_FUNCTIONS_V1 */
 
+#ifndef NVTX_PAYLOAD_API_FUNCTIONS_DEFERRED_V1
+#define NVTX_PAYLOAD_API_FUNCTIONS_DEFERRED_V1
+
+/**
+ * \brief Submit a batch of deferred events in the given domain.
+ *
+ * @param domain NVTX domain
+ * @param eventData Pointer to deferred events data struct.
+ */
+NVTX_DECLSPEC void NVTX_API nvtxEventBatchSubmit(
+    nvtxDomainHandle_t domain,
+    const nvtxEventBatch_t* eventData);
+
+#endif /* NVTX_PAYLOAD_API_FUNCTIONS_DEFERRED_V1 */
+
 /**
  * \brief Callback IDs of API functions in the payload extension.
  *
@@ -988,6 +1064,13 @@ NVTX_DECLSPEC uint8_t NVTX_API nvtxDomainIsEnabled(
 #define NVTX3EXT_CBID_nvtxScopeRegister             12
 
 #endif /* NVTX_PAYLOAD_CALLBACK_ID_V1 */
+
+#ifndef NVTX_PAYLOAD_CALLBACK_ID_DEFERRED_V1
+#define NVTX_PAYLOAD_CALLBACK_ID_DEFERRED_V1
+
+#define NVTX3EXT_CBID_nvtxEventBatchSubmit          17
+
+#endif /* NVTX_PAYLOAD_CALLBACK_ID_DEFERRED_V1 */
 
 /*** Helper utilities ***/
 
