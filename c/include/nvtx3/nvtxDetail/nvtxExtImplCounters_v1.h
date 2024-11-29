@@ -139,6 +139,10 @@ NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCounterSampleNoValue,
     (nvtxDomainHandle_t domain, uint64_t counterId, uint8_t reason),
     (domain, counterId, reason))
 
+NVTX_EXT_COUNTERS_IMPL_FN_V1(void, nvtxCounterBatchSubmit,
+    (nvtxDomainHandle_t domain, const nvtxCounterBatch_t* counterData),
+    (domain, counterData))
+
 #undef return
 #undef NVTX_EXT_FN_RETURN_INVALID
 /* END: void functions. */

@@ -52,6 +52,14 @@
 #define NVTX_COUNTER_SAMPLE_UNCHANGED   1
 #define NVTX_COUNTER_SAMPLE_UNAVAILABLE 2 /* Failed to get a counter sample. */
 
+/**
+ * Counter batch timestamp array flags.
+ * Values must not overlap with `NVTX_BATCH_FLAG_*`.
+ * By default, one timestamp per sample is assumed.
+ */
+#define NVTX_COUNTER_BATCH_FLAG_BEGINTIME_INTERVAL_PAIR (1 << 32)
+#define NVTX_COUNTER_BATCH_FLAG_ENDTIME_INTERVAL_PAIR   (2 << 32)
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
@@ -106,6 +114,48 @@ typedef struct nvtxCounterAttr_v1
     uint64_t counterId;
 } nvtxCounterAttr_t;
 
+/**
+ * \brief Helper struct to submit a batch of counters.
+ *
+ * The size of one sample is specified via the `payloadStaticSize` field of the
+ * counter's data layout schema or the size of the predefined payload entry type
+ * and must include padding. There should be no remainder when dividing
+ * `countersSize` by `nvtxPayloadSchemaAttr_t::payloadStaticSize`.
+ */
+typedef struct nvtxCounterBatch_v1
+{
+    /**
+     * Identifier of a counter group (data layout, scope, etc.). All counter
+     * samples in the batch have the same layout and size.
+     */
+    uint64_t counterId;
+
+    /** Batch of counter (group) samples. */
+    const void* counters;
+
+    /** Size of the counter batch (in bytes). */
+    size_t countersSize;
+
+    /**
+     * Timestamp ordering, timestamp style, etc.
+     * See `NVTX_BATCH_FLAG_*` and `NVTX_COUNTER_BATCH_FLAG_*`.
+     */
+    uint64_t flags;
+
+    /**
+     * Array of timestamps or a timestamp/interval pair. This field can be
+     * `NULL`, if timestamps are included in the counter samples as part of the
+     * counter group layout. By default, one timestamp per sample is assumed.
+     * The timestamp source is specified via time semantics passed during the
+     * counter group registration.
+     * This overrides the timestamps embedded in counter samples.
+     */
+    const int64_t* timestamps;
+
+    /** Size of the timestamps array or timestamp/interval pair (in bytes). */
+    size_t timestampsSize;
+} nvtxCounterBatch_t;
+
 #endif /* NVTX_COUNTER_TYPEDEFS_V1 */
 
 #ifndef NVTX_COUNTER_API_FUNCTIONS_V1
@@ -151,7 +201,7 @@ NVTX_DECLSPEC void NVTX_API nvtxCounterSampleFloat64(
     double value);
 
 /**
- * Sample a counter group by reference immediately
+ * Sample a counter (group) by reference immediately
  * (the NVTX tool determines the timestamp).
  *
  * @param hDomain handle of the NVTX domain.
@@ -177,6 +227,20 @@ NVTX_DECLSPEC void NVTX_API nvtxCounterSampleNoValue(
     uint64_t counterId,
     uint8_t reason);
 
+/**
+ * \brief Submit a batch of counters in the given domain.
+ *
+ * The size of a data sampling point is defined by the `payloadStaticSize` field
+ * of the payload schema. An NVTX tool can assume that the counter samples are
+ * stored as an array with each entry being `payloadStaticSize` bytes.
+ *
+ * @param hDomain handle of the NVTX domain
+ * @param counterData Pointer to the counter data to be submitted.
+ */
+NVTX_DECLSPEC void NVTX_API nvtxCounterBatchSubmit(
+    nvtxDomainHandle_t hDomain,
+    const nvtxCounterBatch_t* counterData);
+
 #endif /* NVTX_COUNTER_API_FUNCTIONS_V1 */
 
 #ifndef NVTX_COUNTER_CALLBACK_ID_V1
@@ -187,6 +251,7 @@ NVTX_DECLSPEC void NVTX_API nvtxCounterSampleNoValue(
 #define NVTX3EXT_CBID_nvtxCounterSampleFloat64      2
 #define NVTX3EXT_CBID_nvtxCounterSample             3
 #define NVTX3EXT_CBID_nvtxCounterSampleNoValue      4
+#define NVTX3EXT_CBID_nvtxCounterBatchSubmit        5
 
 #endif /* NVTX_COUNTER_CALLBACK_ID_V1 */
 
