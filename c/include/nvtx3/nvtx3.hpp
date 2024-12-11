@@ -1056,7 +1056,7 @@ class color {
    * @brief Construct a `color` using the alpha, red, green, blue components
    * in `argb`.
    *
-   * @param argb The alpha, red, green, blue components of the desired `color`
+   * @param argb_ The alpha, red, green, blue components of the desired `color`
    */
   constexpr color(argb argb_) noexcept
     : color{from_bytes_msb_to_lsb(argb_.alpha, argb_.red, argb_.green, argb_.blue)}
@@ -1069,7 +1069,7 @@ class color {
    *
    * Uses maximum value for the alpha channel (opacity) of the `color`.
    *
-   * @param rgb The red, green, blue components of the desired `color`
+   * @param rgb_ The red, green, blue components of the desired `color`
    */
   constexpr color(rgb rgb_) noexcept
     : color{from_bytes_msb_to_lsb(0xFF, rgb_.red, rgb_.green, rgb_.blue)}
@@ -2350,7 +2350,7 @@ inline range_handle start_range_in(event_attributes const& attr) noexcept
  * @tparam D Type containing `name` member used to identify the `domain`
  * to which the range belongs. Else, `domain::global` to indicate that the
  * global NVTX domain should be used.
- * @param args[in] Variadic parameter pack of the arguments for an `event_attributes`.
+ * @param[in] args Variadic parameter pack of the arguments for an `event_attributes`.
  * @return Unique handle to be passed to `end_range` to end the range.
  */
 template <typename D = domain::global, typename... Args>
@@ -2423,7 +2423,7 @@ inline range_handle start_range(event_attributes const& attr) noexcept
  * nvtx3::end_range(h); // Ends the range
  * \endcode
  *
- * @param args[in] Variadic parameter pack of the arguments for an `event_attributes`.
+ * @param[in] args Variadic parameter pack of the arguments for an `event_attributes`.
  * @return Unique handle to be passed to `end_range` to end the range.
  */
 template <typename... Args>
