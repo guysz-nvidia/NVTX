@@ -630,7 +630,7 @@
   *   do { if (!(c)) printf("static_assert would fail: %s\n", m); } while (0)
   */
 #if !defined(NVTX3_STATIC_ASSERT)
-#define NVTX3_STATIC_ASSERT(condition, message) static_assert(condition, message);
+#define NVTX3_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define NVTX3_STATIC_ASSERT_DEFINED_HERE
 #endif
 
@@ -1342,7 +1342,7 @@ class named_category_in final : public category {
     (void)id;
     (void)name;
 #endif
-  };
+  }
 
   /**
    * @brief Construct a `named_category_in` with the specified `id` and `name`.
@@ -1362,7 +1362,7 @@ class named_category_in final : public category {
     (void)id;
     (void)name;
 #endif
-  };
+  }
 };
 
 /**
@@ -1577,7 +1577,7 @@ class registered_string_in {
 
 private:
   // Default constructor is only used internally for static_assert(false) cases.
-  registered_string_in() noexcept {};
+  registered_string_in() noexcept {}
 public:
   ~registered_string_in() = default;
   registered_string_in(registered_string_in const&) = default;
@@ -2240,7 +2240,7 @@ struct range_handle {
    * \endcode
    *
    */
-  constexpr explicit operator bool() const noexcept { return get_value() != null_range_id; };
+  constexpr explicit operator bool() const noexcept { return get_value() != null_range_id; }
 
   /**
    * @brief Implicit conversion from `nullptr` constructs a null handle.
