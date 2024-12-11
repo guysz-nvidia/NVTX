@@ -64,7 +64,7 @@ NVTX_EXT_COUNTERS_VERSIONED_ID(nvtxExtCountersSlots)[NVTX_EXT_COUNTERS_SLOT_COUN
 
 /* Avoid warnings about missing prototype. */
 NVTX_LINKONCE_FWDDECL_FUNCTION void NVTX_EXT_COUNTERS_VERSIONED_ID(nvtxExtCountersInitOnce)(void);
-NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_EXT_COUNTERS_VERSIONED_ID(nvtxExtCountersInitOnce)()
+NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_EXT_COUNTERS_VERSIONED_ID(nvtxExtCountersInitOnce)(void)
 {
     intptr_t* fnSlots = NVTX_EXT_COUNTERS_VERSIONED_ID(nvtxExtCountersSlots) + 1;
     nvtxExtModuleSegment_t segment = {
