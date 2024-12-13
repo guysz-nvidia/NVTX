@@ -45,10 +45,10 @@
  */
 #define NVTX_PAYLOAD_SCHEMA_ATTR(struct_id, schema_name, schema_flags, schema_id, mask_add, num_entries) \
     nvtxPayloadSchemaAttr_t struct_id##Attr = { \
-        /*.fieldMask = */NVTX_PAYLOAD_SCHEMA_ATTR_TYPE | mask_add \
-            NVTX_PAYLOAD_SCHEMA_ATTR_ENTRIES | \
-            NVTX_PAYLOAD_SCHEMA_ATTR_NUM_ENTRIES | \
-            NVTX_PAYLOAD_SCHEMA_ATTR_STATIC_SIZE, \
+        /*.fieldMask = */NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_TYPE | mask_add \
+            NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_ENTRIES | \
+            NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NUM_ENTRIES | \
+            NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_STATIC_SIZE, \
         /*.name = */schema_name, \
         /*.type = */NVTX_PAYLOAD_SCHEMA_TYPE_STATIC, \
         /*.flags = */schema_flags, \
@@ -114,17 +114,17 @@
 #define _NVTX_DEFINE_S4S_6(struct_id, schema_name, prefix, schema_flags, schema_id, entries) \
     prefix _NVTX_PAYLOAD_SCHEMA_ENTRIES(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
     prefix NVTX_PAYLOAD_SCHEMA_ATTR(struct_id, schema_name, schema_flags, schema_id, \
-        NVTX_PAYLOAD_SCHEMA_ATTR_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FLAGS | NVTX_PAYLOAD_SCHEMA_ATTR_SCHEMA_ID |,\
+        NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_FLAGS | NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_SCHEMA_ID |,\
         NVTX_EXT_NUM_ARGS(_NVTX_PAYLOAD_PASS_THROUGH entries))
 #define _NVTX_DEFINE_S4S_5(struct_id, schema_name, prefix, schema_flags, entries) \
     prefix _NVTX_PAYLOAD_SCHEMA_ENTRIES(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
     prefix NVTX_PAYLOAD_SCHEMA_ATTR(struct_id, schema_name, schema_flags, 0, \
-        NVTX_PAYLOAD_SCHEMA_ATTR_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FLAGS |, \
+        NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_FLAGS |, \
         NVTX_EXT_NUM_ARGS(_NVTX_PAYLOAD_PASS_THROUGH entries))
 #define _NVTX_DEFINE_S4S_4(struct_id, schema_name, prefix, entries) \
     prefix _NVTX_PAYLOAD_SCHEMA_ENTRIES(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
     prefix NVTX_PAYLOAD_SCHEMA_ATTR(struct_id, schema_name, NVTX_PAYLOAD_SCHEMA_FLAG_NONE, 0, \
-        NVTX_PAYLOAD_SCHEMA_ATTR_NAME |, \
+        NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NAME |, \
         NVTX_EXT_NUM_ARGS(_NVTX_PAYLOAD_PASS_THROUGH entries))
 #define _NVTX_DEFINE_S4S_3(struct_id, schema_name, entries) \
     _NVTX_DEFINE_S4S_4(struct_id, schema_name, /*prefix*/, entries)
@@ -252,20 +252,20 @@
   _NVTX_PAYLOAD_TYPEDEF_STRUCT(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
   prefix _NVTX_PAYLOAD_SCHEMA_INIT_ENTRIES(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
   prefix NVTX_PAYLOAD_SCHEMA_ATTR(struct_id, schema_name, schema_flags, schema_id, \
-      NVTX_PAYLOAD_SCHEMA_ATTR_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FLAGS | \
-      NVTX_PAYLOAD_SCHEMA_ATTR_SCHEMA_ID |, \
+      NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_FLAGS | \
+      NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_SCHEMA_ID |, \
       NVTX_EXT_NUM_ARGS(_NVTX_PAYLOAD_PASS_THROUGH entries))
 #define _NVTX_DEFINE_SWS_5(struct_id, schema_name, prefix, schema_flags, entries) \
   _NVTX_PAYLOAD_TYPEDEF_STRUCT(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
   prefix _NVTX_PAYLOAD_SCHEMA_INIT_ENTRIES(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
   prefix NVTX_PAYLOAD_SCHEMA_ATTR(struct_id, schema_name, schema_flags, 0, \
-      NVTX_PAYLOAD_SCHEMA_ATTR_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FLAGS |, \
+      NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NAME | NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_FLAGS |, \
       NVTX_EXT_NUM_ARGS(_NVTX_PAYLOAD_PASS_THROUGH entries))
 #define _NVTX_DEFINE_SWS_4(struct_id, schema_name, prefix, entries) \
   _NVTX_PAYLOAD_TYPEDEF_STRUCT(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
   prefix _NVTX_PAYLOAD_SCHEMA_INIT_ENTRIES(struct_id, _NVTX_PAYLOAD_PASS_THROUGH entries) \
   prefix NVTX_PAYLOAD_SCHEMA_ATTR(struct_id, schema_name, NVTX_PAYLOAD_SCHEMA_FLAG_NONE, 0, \
-      NVTX_PAYLOAD_SCHEMA_ATTR_NAME |, \
+      NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NAME |, \
       NVTX_EXT_NUM_ARGS(_NVTX_PAYLOAD_PASS_THROUGH entries))
 #define _NVTX_DEFINE_SWS_3(struct_id, schema_name, entries) \
   _NVTX_DEFINE_SWS_4(struct_id, schema_name, /* no prefix */, entries)
