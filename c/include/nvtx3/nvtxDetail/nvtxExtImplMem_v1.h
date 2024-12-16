@@ -99,7 +99,7 @@ typedef ret_type ( * fn_name##_impl_fntype )signature; \
 #endif /*NVTX_DISABLE*/
 
 /* Non-void functions. */
-#define NVTX_EXT_FN_RETURN_INVALID(rtype) return ((rtype)(intptr_t)-1);
+#define NVTX_EXT_FN_RETURN_INVALID(rtype) return (rtype)0;
 
 NVTX_EXT_FN_IMPL(nvtxMemHeapHandle_t, nvtxMemHeapRegister, (nvtxDomainHandle_t domain, nvtxMemHeapDesc_t const* desc), (domain, desc))
 

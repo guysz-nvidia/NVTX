@@ -106,21 +106,15 @@ typedef ret_type (*fn_name##_impl_fntype)signature; \
             } \
         } \
     } \
-    NVTX_EXT_FN_RETURN_INVALID(ret_type) \
+    NVTX_EXT_FN_RETURN_INVALID(ret_type) /* No tool attached. */ \
 }
 
 #endif /*NVTX_DISABLE*/
 
-/* Non-void functions. */
-#define NVTX_EXT_FN_RETURN_INVALID(rtype) return ((rtype)(intptr_t)-1);
 
-NVTX_EXT_PAYLOAD_IMPL_FN_V1(uint64_t, nvtxPayloadSchemaRegister,
-    (nvtxDomainHandle_t domain, const nvtxPayloadSchemaAttr_t* attr),
-    (domain, attr))
 
-NVTX_EXT_PAYLOAD_IMPL_FN_V1(uint64_t, nvtxPayloadEnumRegister,
-    (nvtxDomainHandle_t domain, const nvtxPayloadEnumAttr_t* attr),
-    (domain, attr))
+/* Push/pop functions return `NVTX_NO_PUSH_POP_TRACKING` if no tool is attached. */
+#define NVTX_EXT_FN_RETURN_INVALID(rtype) return NVTX_NO_PUSH_POP_TRACKING;
 
 NVTX_EXT_PAYLOAD_IMPL_FN_V1(int, nvtxRangePushPayload,
     (nvtxDomainHandle_t domain, const nvtxPayloadData_t* payloadData, size_t count),
@@ -129,6 +123,19 @@ NVTX_EXT_PAYLOAD_IMPL_FN_V1(int, nvtxRangePushPayload,
 NVTX_EXT_PAYLOAD_IMPL_FN_V1(int, nvtxRangePopPayload,
     (nvtxDomainHandle_t domain, const nvtxPayloadData_t* payloadData, size_t count),
     (domain, payloadData, count))
+
+#undef NVTX_EXT_FN_RETURN_INVALID
+
+/* Non-void functions. */
+#define NVTX_EXT_FN_RETURN_INVALID(rtype) return (rtype)0;
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(uint64_t, nvtxPayloadSchemaRegister,
+    (nvtxDomainHandle_t domain, const nvtxPayloadSchemaAttr_t* attr),
+    (domain, attr))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(uint64_t, nvtxPayloadEnumRegister,
+    (nvtxDomainHandle_t domain, const nvtxPayloadEnumAttr_t* attr),
+    (domain, attr))
 
 NVTX_EXT_PAYLOAD_IMPL_FN_V1(nvtxRangeId_t, nvtxRangeStartPayload,
     (nvtxDomainHandle_t domain, const nvtxPayloadData_t* payloadData, size_t count),

@@ -110,7 +110,7 @@ NVTX_DECLSPEC ret_type NVTX_API fn_name signature { \
 #endif /*NVTX_DISABLE*/
 
 /* Non-void functions. */
-#define NVTX_EXT_FN_RETURN_INVALID(rtype) return ((rtype)(intptr_t)-1);
+#define NVTX_EXT_FN_RETURN_INVALID(rtype) return (rtype)0;
 
 NVTX_EXT_COUNTERS_IMPL_FN_V1(uint64_t, nvtxCountersRegister,
     (nvtxDomainHandle_t domain, const nvtxCountersAttr_t* attr),
