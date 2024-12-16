@@ -407,41 +407,41 @@
 #endif /* NVTX_PAYLOAD_SCHEMA_FLAGS_V1 */
 
 
-#ifndef NVTX_PAYLOAD_SCHEMA_ATTRS_V1
-#define NVTX_PAYLOAD_SCHEMA_ATTRS_V1
+#ifndef NVTX_PAYLOAD_SCHEMA_ATTR_FIELDS_V1
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELDS_V1
 
 /**
  * The values allow the valid fields in @ref nvtxPayloadSchemaAttr_t to be
  * specified via setting the field `fieldMask`.
  */
-#define NVTX_PAYLOAD_SCHEMA_ATTR_NAME        (1 << 1)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_TYPE        (1 << 2)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_FLAGS       (1 << 3)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_ENTRIES     (1 << 4)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_NUM_ENTRIES (1 << 5)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_STATIC_SIZE (1 << 6)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_ALIGNMENT   (1 << 7)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_SCHEMA_ID   (1 << 8)
-#define NVTX_PAYLOAD_SCHEMA_ATTR_EXTENSION   (1 << 9)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NAME        (1 << 1)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_TYPE        (1 << 2)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_FLAGS       (1 << 3)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_ENTRIES     (1 << 4)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_NUM_ENTRIES (1 << 5)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_STATIC_SIZE (1 << 6)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_ALIGNMENT   (1 << 7)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_SCHEMA_ID   (1 << 8)
+#define NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_EXTENSION   (1 << 9)
 
-#endif /* NVTX_PAYLOAD_SCHEMA_ATTRS_V1 */
+#endif /* NVTX_PAYLOAD_SCHEMA_ATTR_FIELDS_V1 */
 
 
-#ifndef NVTX_PAYLOAD_ENUM_ATTRS_V1
-#define NVTX_PAYLOAD_ENUM_ATTRS_V1
+#ifndef NVTX_PAYLOAD_ENUM_ATTR_FIELDS_V1
+#define NVTX_PAYLOAD_ENUM_ATTR_FIELDS_V1
 
 /**
  * The values are used to set the field `fieldMask` and specify which fields in
  * @ref nvtxPayloadEnumAttr_t are set.
  */
-#define NVTX_PAYLOAD_ENUM_ATTR_NAME        (1 << 1)
-#define NVTX_PAYLOAD_ENUM_ATTR_ENTRIES     (1 << 2)
-#define NVTX_PAYLOAD_ENUM_ATTR_NUM_ENTRIES (1 << 3)
-#define NVTX_PAYLOAD_ENUM_ATTR_SIZE        (1 << 4)
-#define NVTX_PAYLOAD_ENUM_ATTR_SCHEMA_ID   (1 << 5)
-#define NVTX_PAYLOAD_ENUM_ATTR_EXTENSION   (1 << 6)
+#define NVTX_PAYLOAD_ENUM_ATTR_FIELD_NAME        (1 << 1)
+#define NVTX_PAYLOAD_ENUM_ATTR_FIELD_ENTRIES     (1 << 2)
+#define NVTX_PAYLOAD_ENUM_ATTR_FIELD_NUM_ENTRIES (1 << 3)
+#define NVTX_PAYLOAD_ENUM_ATTR_FIELD_SIZE        (1 << 4)
+#define NVTX_PAYLOAD_ENUM_ATTR_FIELD_SCHEMA_ID   (1 << 5)
+#define NVTX_PAYLOAD_ENUM_ATTR_FIELD_EXTENSION   (1 << 6)
 
-#endif /* NVTX_PAYLOAD_ENUM_ATTRS_V1 */
+#endif /* NVTX_PAYLOAD_ENUM_ATTR_FIELDS_V1 */
 
 /**
  * An NVTX scope specifies the execution scope or source of events or counters.
@@ -657,7 +657,7 @@ typedef struct nvtxPayloadSchemaAttr_v1
     /**
      * \brief Mask of valid fields in this struct.
      *
-     * Use the `NVTX_PAYLOAD_SCHEMA_ATTR_*` defines.
+     * Use the `NVTX_PAYLOAD_SCHEMA_ATTR_FIELD_*` defines.
      */
     uint64_t                        fieldMask;
 
@@ -767,7 +767,7 @@ typedef struct nvtxPayloadEnum_v1
 typedef struct nvtxPayloadEnumAttr_v1
 {
     /**
-     * Mask of valid fields in this struct. See `NVTX_PAYLOAD_ENUM_ATTR_*`.
+     * Mask of valid fields in this struct. See `NVTX_PAYLOAD_ENUM_ATTR_FIELD_*`.
      */
     uint64_t                 fieldMask;
 
