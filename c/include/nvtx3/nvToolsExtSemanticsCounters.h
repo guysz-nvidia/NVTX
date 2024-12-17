@@ -27,54 +27,54 @@
 #define NVTX_SEMANTIC_ID_COUNTERS_V1 5
 
 /* Use with the version field of `nvtxSemanticsHeader_t`. */
-#define NVTX_COUNTERS_SEMANTIC_VERSION 2
+#define NVTX_COUNTER_SEMANTIC_VERSION 2
 
 /***  Flags to augment the counter value. ***/
-#define NVTX_COUNTERS_FLAGS_NONE  0
+#define NVTX_COUNTER_FLAGS_NONE  0
 
 /**
  * Convert the fixed point value to a normalized floating point.
  * Use the sign/unsign from the underlying type this flag is applied to.
  * Unsigned [0f : 1f] or signed [-1f : 1f]
  */
-#define NVTX_COUNTERS_FLAG_NORMALIZE  (1 << 1)
+#define NVTX_COUNTER_FLAG_NORMALIZE  (1 << 1)
 
 /**
  * Tools should apply scale and limits when graphing, ideally in a "soft" way to
  * to see when limits are exceeded.
  */
-#define NVTX_COUNTERS_FLAG_LIMIT_MIN  (1 << 2)
-#define NVTX_COUNTERS_FLAG_LIMIT_MAX  (1 << 3)
-#define NVTX_COUNTERS_FLAG_LIMITS \
-    (NVTX_COUNTERS_FLAG_LIMIT_MIN | NVTX_COUNTERS_FLAG_LIMIT_MAX)
+#define NVTX_COUNTER_FLAG_LIMIT_MIN  (1 << 2)
+#define NVTX_COUNTER_FLAG_LIMIT_MAX  (1 << 3)
+#define NVTX_COUNTER_FLAG_LIMITS \
+    (NVTX_COUNTER_FLAG_LIMIT_MIN | NVTX_COUNTER_FLAG_LIMIT_MAX)
 
 /**
  * Counter value types
  */
-#define NVTX_COUNTERS_FLAG_VALUETYPE_ABSOLUTE          (1 << 4)
+#define NVTX_COUNTER_FLAG_VALUETYPE_ABSOLUTE          (1 << 4)
 /* Delta to previous sample, tool-defined if no previous sample is available. */
-#define NVTX_COUNTERS_FLAG_VALUETYPE_DELTA             (2 << 4)
-#define NVTX_COUNTERS_FLAG_VALUETYPE_DELTA_SINCE_START (3 << 4)
+#define NVTX_COUNTER_FLAG_VALUETYPE_DELTA             (2 << 4)
+#define NVTX_COUNTER_FLAG_VALUETYPE_DELTA_SINCE_START (3 << 4)
 
 /**
  * Counter interpolation / effective range of counters.
  */
 /* No interpolation between samples. */
-#define NVTX_COUNTERS_FLAG_INTERPOLATION_POINT         (1 << 8)
+#define NVTX_COUNTER_FLAG_INTERPOLATION_POINT         (1 << 8)
 /* Piecewise constant interpolation between the current and the last sample. */
-#define NVTX_COUNTERS_FLAG_INTERPOLATION_SINCE_LAST    (2 << 8)
+#define NVTX_COUNTER_FLAG_INTERPOLATION_SINCE_LAST    (2 << 8)
 /* Piecewise constant interpolation between the current and the next sample. */
-#define NVTX_COUNTERS_FLAG_INTERPOLATION_UNTIL_NEXT    (3 << 8)
+#define NVTX_COUNTER_FLAG_INTERPOLATION_UNTIL_NEXT    (3 << 8)
 /* Piecewise linear interpolation between samples. */
-#define NVTX_COUNTERS_FLAG_INTERPOLATION_LINEAR        (4 << 8)
+#define NVTX_COUNTER_FLAG_INTERPOLATION_LINEAR        (4 << 8)
 
 /**
  * Datatype for limits union (value of `limitType`).
  */
-#define NVTX_COUNTERS_LIMIT_UNDEFINED 0
-#define NVTX_COUNTERS_LIMIT_I64       1
-#define NVTX_COUNTERS_LIMIT_U64       2
-#define NVTX_COUNTERS_LIMIT_F64       3
+#define NVTX_COUNTER_LIMIT_UNDEFINED 0
+#define NVTX_COUNTER_LIMIT_I64       1
+#define NVTX_COUNTER_LIMIT_U64       2
+#define NVTX_COUNTER_LIMIT_F64       3
 
 
 /**
@@ -112,7 +112,7 @@ typedef struct nvtxSemanticsCounter_v1
 
     /**
      * Specifies the used union member for `min` and `max`.
-     * Use the defines `NVTX_COUNTERS_LIMIT_*`.
+     * Use the defines `NVTX_COUNTER_LIMIT_*`.
      */
     int64_t limitType;
 

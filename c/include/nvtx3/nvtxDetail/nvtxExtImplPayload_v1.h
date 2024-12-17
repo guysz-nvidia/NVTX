@@ -146,6 +146,12 @@ NVTX_EXT_PAYLOAD_IMPL_FN_V1(uint8_t, nvtxDomainIsEnabled, (nvtxDomainHandle_t do
 NVTX_EXT_PAYLOAD_IMPL_FN_V1(uint64_t, nvtxScopeRegister, (nvtxDomainHandle_t domain,
     const nvtxScopeAttr_t* attr), (domain, attr))
 
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(int64_t, nvtxTimestampGet, (), ())
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(uint64_t, nvtxTimeDomainRegister,
+    (nvtxDomainHandle_t domain, const nvtxTimeDomainAttr_t* attr),
+    (domain, attr))
+
 #undef NVTX_EXT_FN_RETURN_INVALID
 /* END: Non-void functions. */
 
@@ -159,6 +165,36 @@ NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxMarkPayload, (nvtxDomainHandle_t domain,
 NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxRangeEndPayload, (nvtxDomainHandle_t domain,
     nvtxRangeId_t id, const nvtxPayloadData_t* payloadData, size_t count),
     (domain, id, payloadData, count))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxTimerSource,
+    (nvtxDomainHandle_t domain, uint64_t timeId, uint64_t flags, int64_t (*timestampProviderFn)()),
+    (domain, timeId, flags, timestampProviderFn))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxTimerSourceWithData,
+    (nvtxDomainHandle_t domain, uint64_t timeDomainId, uint64_t flags, int64_t (*timestampProviderFn)(void* data), void* data),
+    (domain, timeDomainId, flags, timestampProviderFn, data))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxTimeSyncPoint,
+    (nvtxDomainHandle_t domain, uint64_t timeDomainId1, uint64_t timeDomainId2,
+        int64_t timestamp1, int64_t timestamp2),
+    (domain, timeDomainId1, timeDomainId2, timestamp1, timestamp2))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxTimeSyncPointTable,
+    (nvtxDomainHandle_t domain, uint64_t timeDomainIdSrc, uint64_t timeDomainIdDst,
+    const nvtxSyncPoint_t* syncPoints, size_t count),
+    (domain, timeDomainIdSrc, timeDomainIdDst, syncPoints, count))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxTimestampConversionFactor,
+    (nvtxDomainHandle_t domain, uint64_t timeDomainIdSrc, uint64_t timeDomainIdDst,
+        double slope, int64_t timestampSrc, int64_t timestampDst),
+    (domain, timeDomainIdSrc, timeDomainIdDst, slope, timestampSrc, timestampDst))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxEventSubmit,
+    (nvtxDomainHandle_t domain, const nvtxPayloadData_t* payloadData, size_t numPayloads),
+    (domain, payloadData, numPayloads))
+
+NVTX_EXT_PAYLOAD_IMPL_FN_V1(void, nvtxEventBatchSubmit, (nvtxDomainHandle_t domain,
+    const nvtxEventBatch_t* events), (domain, events))
 
 #undef return
 #undef NVTX_EXT_FN_RETURN_INVALID

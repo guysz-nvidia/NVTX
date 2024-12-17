@@ -31,38 +31,17 @@ extern "C" {
 /* Prefer macros over inline functions to reduce symbol resolution at link time */
 
 #if defined(_WIN32)
-#define NVTX_PATHCHAR   wchar_t
-#define NVTX_STR(x)     L##x
-#define NVTX_GETENV     _wgetenv
-#define NVTX_BUFSIZE    16384
-#define NVTX_DLLHANDLE  HMODULE
-#define NVTX_DLLOPEN(x) LoadLibraryW(x)
-#define NVTX_DLLFUNC    GetProcAddress
-#define NVTX_DLLCLOSE   FreeLibrary
-#define NVTX_YIELD()    SwitchToThread()
-#define NVTX_MEMBAR()   MemoryBarrier()
-#define NVTX_ATOMIC_WRITE_32(address, value)                        InterlockedExchange((volatile LONG*)address, value)
-#define NVTX_ATOMIC_CAS_32(old, address, exchange, comparand) old = InterlockedCompareExchange((volatile LONG*)address, exchange, comparand)
-#define NVTX_ATOMIC_WRITE_PTR(address, value)                        InterlockedExchangePointer((volatile PVOID*)address, (PVOID)value)
-#define NVTX_ATOMIC_CAS_PTR(old, address, exchange, comparand) old = (intptr_t)InterlockedCompareExchangePointer((volatile PVOID*)address, (PVOID)exchange, (PVOID)comparand)
-
-
+#define NVTX_ATOMIC_WRITE_PTR(address, value) \
+    InterlockedExchangePointer((volatile PVOID*)address, (PVOID)value)
+#define NVTX_ATOMIC_CAS_PTR(old, address, exchange, comparand) \
+    old = (intptr_t)InterlockedCompareExchangePointer( \
+        (volatile PVOID*)address, (PVOID)exchange, (PVOID)comparand)
 #elif defined(__GNUC__)
-#define NVTX_PATHCHAR   char
-#define NVTX_STR(x)     x
-#define NVTX_GETENV     getenv
-#define NVTX_BUFSIZE    16384
-#define NVTX_DLLHANDLE  void*
-#define NVTX_DLLOPEN(x) dlopen(x, RTLD_LAZY)
-#define NVTX_DLLFUNC    dlsym
-#define NVTX_DLLCLOSE   dlclose
-#define NVTX_YIELD()    sched_yield()
-#define NVTX_MEMBAR()   __sync_synchronize()
-/* Ensure full memory barrier for atomics, to match Windows functions. */
-#define NVTX_ATOMIC_WRITE_32(address, value)                  __sync_synchronize();       __sync_lock_test_and_set(address, value)
-#define NVTX_ATOMIC_CAS_32(old, address, exchange, comparand) __sync_synchronize(); old = __sync_val_compare_and_swap(address, exchange, comparand)
-#define NVTX_ATOMIC_WRITE_PTR(address, value)                  __sync_synchronize();       __sync_lock_test_and_set(address, value)
-#define NVTX_ATOMIC_CAS_PTR(old, address, exchange, comparand) __sync_synchronize(); old = __sync_val_compare_and_swap(address, exchange, comparand)
+/* Ensure full memory barrier for atomics, to match Windows functions */
+#define NVTX_ATOMIC_WRITE_PTR(address, value) \
+    __sync_synchronize(); *address = value; __sync_synchronize()
+#define NVTX_ATOMIC_CAS_PTR(old, address, exchange, comparand) \
+    old = __sync_val_compare_and_swap(address, comparand, exchange)
 #else
 #error The library does not support your configuration!
 #endif
