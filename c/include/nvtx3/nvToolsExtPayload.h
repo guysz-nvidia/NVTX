@@ -831,15 +831,23 @@ typedef struct nvtxScopeAttr_v1
      * be UTF8 printable characters. '\' has to be used to escape '/', '[', and
      * ']' characters in node names. An empty C string "" and `NULL` are valid
      * inputs and treated equivalently.
+     *
+     * A GPU can be specified using its
+     * - unique identifier (UUID) with "GPU[UUID:#]",
+     * - CUDA device ID (sensitive to CUDA_VISIBLE_DEVICES) with "GPU[CUDAID:#]”,
+     * - NVML (nvidia-smi) device ID with “GPU[NVSMI:#]”
+     * (replace `#` with the actual device ID).
+     * For display purposes, a tool is recommended to show a pretty name.
      */
     const char* path;
 
+    /** Identifier of the parent scope, to which `path` is appended. */
     uint64_t    parentScope;
 
     /**
-     * The static scope ID must be unique within the domain,
-     * >= NVTX_SCOPE_ID_STATIC_START, and
-     * < NVTX_SCOPE_ID_DYNAMIC_START.
+     * Static scope ID. Must be unique within the domain,
+     * >= NVTX_SCOPE_ID_STATIC_START, and < NVTX_SCOPE_ID_DYNAMIC_START.
+     * Use NVTX_SCOPE_INVALID to let the tool create a (dynamic) scope ID.
      */
     uint64_t    scopeId;
 } nvtxScopeAttr_t;
