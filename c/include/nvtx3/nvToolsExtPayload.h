@@ -127,12 +127,12 @@
 #define NVTX_PAYLOAD_ENTRY_FLAG_EVENT_MESSAGE      (1 << 10)
 
 /**
- * \brief The entry contains an event timestamp.
+ * \brief The entry contains a timestamp.
  *
  * The time source might be provided via the entry semantics field. In most
- * cases, the timestamp (entry) type is @ref NVTX_PAYLOAD_ENTRY_TYPE_UINT64.
+ * cases, the timestamp (entry) type is @ref NVTX_PAYLOAD_ENTRY_TYPE_INT64.
  */
-#define NVTX_PAYLOAD_ENTRY_FLAG_EVENT_TIMESTAMP    (2 << 10)
+#define NVTX_PAYLOAD_ENTRY_FLAG_TIMESTAMP          (2 << 10)
 
 /**
  * These flags specify the NVTX event type to which an entry refers.
