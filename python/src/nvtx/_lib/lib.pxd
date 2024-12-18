@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 # Licensed under the Apache License v2.0 with LLVM Exceptions.
-# See LICENSE.txt for license information.
+# See https://nvidia.github.io/NVTX/LICENSE.txt for license information.
 
 from libc.stdint cimport uint16_t, uint32_t, uint64_t, int32_t, int64_t
 from libc.stddef cimport wchar_t

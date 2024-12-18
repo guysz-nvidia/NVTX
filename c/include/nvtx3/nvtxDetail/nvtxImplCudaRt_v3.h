@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  * Licensed under the Apache License v2.0 with LLVM Exceptions.
- * See LICENSE.txt for license information.
+ * See https://nvidia.github.io/NVTX/LICENSE.txt for license information.
  */
 
 #ifndef NVTX_IMPL_GUARD_CUDART
