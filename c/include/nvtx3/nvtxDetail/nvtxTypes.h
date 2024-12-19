@@ -52,9 +52,8 @@ typedef void* nvtx_cl_kernel;
 typedef void* nvtx_cl_event;
 typedef void* nvtx_cl_sampler;
 
-typedef struct nvtxSyncUser* nvtxSyncUser_t;
-struct nvtxSyncUserAttributes_v0;
-typedef struct nvtxSyncUserAttributes_v0 nvtxSyncUserAttributes_t;
+typedef void* nvtx_nvtxSyncUser_t;
+typedef void nvtx_nvtxSyncUserAttributes_t;
 
 /* --------- Types for function pointers (with fake API types) ---------- */
 
@@ -101,8 +100,8 @@ typedef void (NVTX_API * nvtxNameClEventA_fakeimpl_fntype)(nvtx_cl_event evnt, c
 typedef void (NVTX_API * nvtxNameClEventW_fakeimpl_fntype)(nvtx_cl_event evnt, const wchar_t* name);
 
 /* Real impl types are defined in nvtxImplCudaRt_v3.h, where CUDART headers are included */
-typedef void (NVTX_API * nvtxNameCudaDeviceA_impl_fntype)(int device, const char* name);
-typedef void (NVTX_API * nvtxNameCudaDeviceW_impl_fntype)(int device, const wchar_t* name);
+typedef void (NVTX_API * nvtxNameCudaDeviceA_fakeimpl_fntype)(int device, const char* name);
+typedef void (NVTX_API * nvtxNameCudaDeviceW_fakeimpl_fntype)(int device, const wchar_t* name);
 typedef void (NVTX_API * nvtxNameCudaStreamA_fakeimpl_fntype)(nvtx_cudaStream_t stream, const char* name);
 typedef void (NVTX_API * nvtxNameCudaStreamW_fakeimpl_fntype)(nvtx_cudaStream_t stream, const wchar_t* name);
 typedef void (NVTX_API * nvtxNameCudaEventA_fakeimpl_fntype)(nvtx_cudaEvent_t event, const char* name);
@@ -124,12 +123,12 @@ typedef nvtxDomainHandle_t (NVTX_API * nvtxDomainCreateW_impl_fntype)(const wcha
 typedef void (NVTX_API * nvtxDomainDestroy_impl_fntype)(nvtxDomainHandle_t domain);
 typedef void (NVTX_API * nvtxInitialize_impl_fntype)(const void* reserved);
 
-typedef nvtxSyncUser_t (NVTX_API * nvtxDomainSyncUserCreate_impl_fntype)(nvtxDomainHandle_t domain, const nvtxSyncUserAttributes_t* attribs);
-typedef void (NVTX_API * nvtxDomainSyncUserDestroy_impl_fntype)(nvtxSyncUser_t handle);
-typedef void (NVTX_API * nvtxDomainSyncUserAcquireStart_impl_fntype)(nvtxSyncUser_t handle);
-typedef void (NVTX_API * nvtxDomainSyncUserAcquireFailed_impl_fntype)(nvtxSyncUser_t handle);
-typedef void (NVTX_API * nvtxDomainSyncUserAcquireSuccess_impl_fntype)(nvtxSyncUser_t handle);
-typedef void (NVTX_API * nvtxDomainSyncUserReleasing_impl_fntype)(nvtxSyncUser_t handle);
+typedef nvtx_nvtxSyncUser_t (NVTX_API * nvtxDomainSyncUserCreate_fakeimpl_fntype)(nvtxDomainHandle_t domain, const nvtx_nvtxSyncUserAttributes_t* attribs);
+typedef void (NVTX_API * nvtxDomainSyncUserDestroy_fakeimpl_fntype)(nvtx_nvtxSyncUser_t handle);
+typedef void (NVTX_API * nvtxDomainSyncUserAcquireStart_fakeimpl_fntype)(nvtx_nvtxSyncUser_t handle);
+typedef void (NVTX_API * nvtxDomainSyncUserAcquireFailed_fakeimpl_fntype)(nvtx_nvtxSyncUser_t handle);
+typedef void (NVTX_API * nvtxDomainSyncUserAcquireSuccess_fakeimpl_fntype)(nvtx_nvtxSyncUser_t handle);
+typedef void (NVTX_API * nvtxDomainSyncUserReleasing_fakeimpl_fntype)(nvtx_nvtxSyncUser_t handle);
 
 /* ---------------- Types for callback subscription --------------------- */
 

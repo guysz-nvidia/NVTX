@@ -237,7 +237,7 @@ NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxNameCu
 }
 
 NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxNameCudaDeviceA_impl_init)(int device, const char* name){
-    nvtxNameCudaDeviceA_impl_fntype local;
+    nvtxNameCudaDeviceA_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxNameCudaDeviceA_impl_fnptr;
     if (local)
@@ -245,7 +245,7 @@ NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxNameCu
 }
 
 NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxNameCudaDeviceW_impl_init)(int device, const wchar_t* name){
-    nvtxNameCudaDeviceW_impl_fntype local;
+    nvtxNameCudaDeviceW_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxNameCudaDeviceW_impl_fnptr;
     if (local)
@@ -396,50 +396,50 @@ NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxNameCl
         local(evnt, name);
 }
 
-NVTX_LINKONCE_DEFINE_FUNCTION nvtxSyncUser_t NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserCreate_impl_init)(nvtxDomainHandle_t domain, const nvtxSyncUserAttributes_t* attribs){
-    nvtxDomainSyncUserCreate_impl_fntype local;
+NVTX_LINKONCE_DEFINE_FUNCTION nvtx_nvtxSyncUser_t NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserCreate_impl_init)(nvtxDomainHandle_t domain, const nvtx_nvtxSyncUserAttributes_t* attribs){
+    nvtxDomainSyncUserCreate_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxDomainSyncUserCreate_impl_fnptr;
     if (local) {
         return local(domain, attribs);
     }
-    return (nvtxSyncUser_t)0;
+    return (nvtx_nvtxSyncUser_t)0;
 }
 
-NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserDestroy_impl_init)(nvtxSyncUser_t handle){
-    nvtxDomainSyncUserDestroy_impl_fntype local;
+NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserDestroy_impl_init)(nvtx_nvtxSyncUser_t handle){
+    nvtxDomainSyncUserDestroy_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxDomainSyncUserDestroy_impl_fnptr;
     if (local)
         local(handle);
 }
 
-NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserAcquireStart_impl_init)(nvtxSyncUser_t handle){
-    nvtxDomainSyncUserAcquireStart_impl_fntype local;
+NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserAcquireStart_impl_init)(nvtx_nvtxSyncUser_t handle){
+    nvtxDomainSyncUserAcquireStart_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxDomainSyncUserAcquireStart_impl_fnptr;
     if (local)
         local(handle);
 }
 
-NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserAcquireFailed_impl_init)(nvtxSyncUser_t handle){
-    nvtxDomainSyncUserAcquireFailed_impl_fntype local;
+NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserAcquireFailed_impl_init)(nvtx_nvtxSyncUser_t handle){
+    nvtxDomainSyncUserAcquireFailed_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxDomainSyncUserAcquireFailed_impl_fnptr;
     if (local)
         local(handle);
 }
 
-NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserAcquireSuccess_impl_init)(nvtxSyncUser_t handle){
-    nvtxDomainSyncUserAcquireSuccess_impl_fntype local;
+NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserAcquireSuccess_impl_init)(nvtx_nvtxSyncUser_t handle){
+    nvtxDomainSyncUserAcquireSuccess_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxDomainSyncUserAcquireSuccess_impl_fnptr;
     if (local)
         local(handle);
 }
 
-NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserReleasing_impl_init)(nvtxSyncUser_t handle){
-    nvtxDomainSyncUserReleasing_impl_fntype local;
+NVTX_LINKONCE_DEFINE_FUNCTION void NVTX_API NVTX_VERSIONED_IDENTIFIER(nvtxDomainSyncUserReleasing_impl_init)(nvtx_nvtxSyncUser_t handle){
+    nvtxDomainSyncUserReleasing_fakeimpl_fntype local;
     NVTX_VERSIONED_IDENTIFIER(nvtxInitOnce)();
     local = NVTX_VERSIONED_IDENTIFIER(nvtxGlobals).nvtxDomainSyncUserReleasing_impl_fnptr;
     if (local)

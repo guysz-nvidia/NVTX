@@ -145,8 +145,8 @@ typedef struct nvtxGlobals_t
     nvtxNameClEventA_fakeimpl_fntype nvtxNameClEventA_impl_fnptr;
     nvtxNameClEventW_fakeimpl_fntype nvtxNameClEventW_impl_fnptr;
 
-    nvtxNameCudaDeviceA_impl_fntype nvtxNameCudaDeviceA_impl_fnptr;
-    nvtxNameCudaDeviceW_impl_fntype nvtxNameCudaDeviceW_impl_fnptr;
+    nvtxNameCudaDeviceA_fakeimpl_fntype nvtxNameCudaDeviceA_impl_fnptr;
+    nvtxNameCudaDeviceW_fakeimpl_fntype nvtxNameCudaDeviceW_impl_fnptr;
     nvtxNameCudaStreamA_fakeimpl_fntype nvtxNameCudaStreamA_impl_fnptr;
     nvtxNameCudaStreamW_fakeimpl_fntype nvtxNameCudaStreamW_impl_fnptr;
     nvtxNameCudaEventA_fakeimpl_fntype nvtxNameCudaEventA_impl_fnptr;
@@ -168,12 +168,12 @@ typedef struct nvtxGlobals_t
     nvtxDomainDestroy_impl_fntype nvtxDomainDestroy_impl_fnptr;
     nvtxInitialize_impl_fntype nvtxInitialize_impl_fnptr;
 
-    nvtxDomainSyncUserCreate_impl_fntype nvtxDomainSyncUserCreate_impl_fnptr;
-    nvtxDomainSyncUserDestroy_impl_fntype nvtxDomainSyncUserDestroy_impl_fnptr;
-    nvtxDomainSyncUserAcquireStart_impl_fntype nvtxDomainSyncUserAcquireStart_impl_fnptr;
-    nvtxDomainSyncUserAcquireFailed_impl_fntype nvtxDomainSyncUserAcquireFailed_impl_fnptr;
-    nvtxDomainSyncUserAcquireSuccess_impl_fntype nvtxDomainSyncUserAcquireSuccess_impl_fnptr;
-    nvtxDomainSyncUserReleasing_impl_fntype nvtxDomainSyncUserReleasing_impl_fnptr;
+    nvtxDomainSyncUserCreate_fakeimpl_fntype nvtxDomainSyncUserCreate_impl_fnptr;
+    nvtxDomainSyncUserDestroy_fakeimpl_fntype nvtxDomainSyncUserDestroy_impl_fnptr;
+    nvtxDomainSyncUserAcquireStart_fakeimpl_fntype nvtxDomainSyncUserAcquireStart_impl_fnptr;
+    nvtxDomainSyncUserAcquireFailed_fakeimpl_fntype nvtxDomainSyncUserAcquireFailed_impl_fnptr;
+    nvtxDomainSyncUserAcquireSuccess_fakeimpl_fntype nvtxDomainSyncUserAcquireSuccess_impl_fnptr;
+    nvtxDomainSyncUserReleasing_fakeimpl_fntype nvtxDomainSyncUserReleasing_impl_fnptr;
 
     /* Tables of function pointers -- Extra null added to the end to ensure
     *  a crash instead of silent corruption if a tool reads off the end. */
